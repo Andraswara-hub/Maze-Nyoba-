@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Maze Cinta untuk Fhiranda</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #ffc9f2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            font-family: sans-serif;
+        }
+        #game-container {
+            position: relative;
+            background: url('maze_bg_resized.png') no-repeat center;
+            background-size: contain;
+            width: 600px;
+            height: auto;
+            aspect-ratio: 600 / 768;
+        }
+        #player {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background: #ff3b3f;
+            border-radius: 50%;
+            top: 640px;
+            left: 40px;
+            touch-action: none;
+            cursor: grab;
+        }
+        #message {
+            position: absolute;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+            display: none;
+            font-size: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <div id="player" draggable="false"></div>
+        <div id="message">Yeay ketemu akuuu 💖</div>
+    </div>
+    <script>
+        const player = document.getElementById("player");
+        const container = document.getElementById("game-container");
+        const message = document.getElementById("message");
+
+        let offsetX, offsetY, isDragging = false;
+
+        player.addEventListener("pointerdown", (e) => {
+            isDragging = true;
+            offsetX = e.clientX - player.offsetLeft;
+            offsetY = e.clientY - player.offsetTop;
+            player.setPointerCapture(e.pointerId);
+        });
+
+        player.addEventListener("pointermove", (e) => {
+            if (!isDragging) return;
+            const x = e.clientX - offsetX;
+            const y = e.clientY - offsetY;
+
+            // Boundaries check
+            const containerRect = container.getBoundingClientRect();
+            const maxX = container.clientWidth - player.clientWidth;
+            const maxY = container.clientHeight - player.clientHeight;
+
+            let newX = Math.max(0, Math.min(x, maxX));
+            let newY = Math.max(0, Math.min(y, maxY));
+
+            player.style.left = newX + "px";
+            player.style.top = newY + "px";
+
+            // Cek apakah berada di titik akhir
+            if (newX > 450 && newY < 150) {
+                message.style.display = "block";
+            }
+        });
+
+        player.addEventListener("pointerup", () => {
+            isDragging = false;
+        });
+    </script>
+</body>
+</html>
